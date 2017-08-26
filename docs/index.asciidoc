@@ -1,0 +1,5 @@
+= Krakenbeat Docs
+
+Welcome to the Krakenbeat documentation.
+
+

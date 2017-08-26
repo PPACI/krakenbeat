@@ -1,0 +1,9 @@
+- key: krakenbeat
+  title: krakenbeat
+  description:
+  fields:
+    - name: counter
+      type: long
+      required: true
+      description: >
+        PLEASE UPDATE DOCUMENTATION

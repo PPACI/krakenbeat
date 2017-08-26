@@ -1,0 +1,8 @@
+/.idea
+krakenbeat.iml
+/build
+
+.DS_Store
+/krakenbeat
+/krakenbeat.test
+*.pyc
