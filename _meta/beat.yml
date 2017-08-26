@@ -3,5 +3,8 @@
 ############################# Krakenbeat ######################################
 
 krakenbeat:
-  # Defines how often an event is sent to the output
+  # Defines how often we will poll kraken
   period: 1s
+  pairs:
+    - BCHEUR
+

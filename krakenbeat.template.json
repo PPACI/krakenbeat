@@ -39,9 +39,6 @@
             }
           }
         },
-        "counter": {
-          "type": "long"
-        },
         "meta": {
           "properties": {
             "cloud": {
@@ -74,9 +71,22 @@
             }
           }
         },
+        "pair": {
+          "ignore_above": 1024,
+          "type": "keyword"
+        },
+        "price": {
+          "type": "float"
+        },
         "tags": {
           "ignore_above": 1024,
           "type": "keyword"
+        },
+        "timestamp": {
+          "type": "date"
+        },
+        "volume": {
+          "type": "float"
         }
       }
     }

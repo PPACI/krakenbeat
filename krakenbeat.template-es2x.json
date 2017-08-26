@@ -45,9 +45,6 @@
             }
           }
         },
-        "counter": {
-          "type": "long"
-        },
         "meta": {
           "properties": {
             "cloud": {
@@ -86,10 +83,24 @@
             }
           }
         },
+        "pair": {
+          "ignore_above": 1024,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "price": {
+          "type": "float"
+        },
         "tags": {
           "ignore_above": 1024,
           "index": "not_analyzed",
           "type": "string"
+        },
+        "timestamp": {
+          "type": "date"
+        },
+        "volume": {
+          "type": "float"
         }
       }
     }

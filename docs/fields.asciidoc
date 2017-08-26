@@ -128,12 +128,38 @@ None
 
 
 [float]
-=== counter
+=== pair
 
-type: long
+type: keyword
 
 required: True
 
-PLEASE UPDATE DOCUMENTATION
+Name of the pair
 
+[float]
+=== timestamp
+
+type: date
+
+required: True
+
+timestamp of the transaction
+
+[float]
+=== price
+
+type: float
+
+required: True
+
+price per pair in transaction
+
+[float]
+=== volume
+
+type: float
+
+required: True
+
+volume in transaction
 

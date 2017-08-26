@@ -2,8 +2,20 @@
   title: krakenbeat
   description:
   fields:
-    - name: counter
-      type: long
+    - name: pair
+      type: keyword
       required: true
-      description: >
-        PLEASE UPDATE DOCUMENTATION
+      description: Name of the pair
+    - name: timestamp
+      type: date
+      required: true
+      description: timestamp of the transaction
+    - name: price
+      type: float
+      required: true
+      description: price per pair in transaction
+    - name: volume
+      type: float
+      required: true
+      description: volume in transaction
+
