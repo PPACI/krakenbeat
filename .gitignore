@@ -4,5 +4,6 @@ krakenbeat.iml
 
 .DS_Store
 /krakenbeat
+/krakenbeat.exe
 /krakenbeat.test
 *.pyc
