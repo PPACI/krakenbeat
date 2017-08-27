@@ -7,3 +7,5 @@ krakenbeat.iml
 /krakenbeat.exe
 /krakenbeat.test
 *.pyc
+
+/logs/*
