@@ -16,11 +16,13 @@ type Krakenbeat struct {
 	done   chan struct{}
 	config config.Config
 	client publisher.Client
+	krakenClient Krakenclient
 }
 
 // Creates beater
 func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 	config := config.DefaultConfig
+	krakenclient := KrakenHTTPClient{}
 	if err := cfg.Unpack(&config); err != nil {
 		return nil, fmt.Errorf("Error reading config file: %v", err)
 	}
@@ -28,6 +30,7 @@ func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 	bt := &Krakenbeat{
 		done:   make(chan struct{}),
 		config: config,
+		krakenClient: &krakenclient,
 	}
 	return bt, nil
 }
@@ -37,22 +40,26 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 
 	bt.client = b.Publisher.Connect()
 	ticker := time.NewTicker(bt.config.Period)
-	counter := 1
+	lastPoll := time.Now()
+
 	for {
 		select {
 		case <-bt.done:
 			return nil
 		case <-ticker.C:
 		}
+		krakenTransactions := bt.krakenClient.Poll(bt.config.Pairs, lastPoll)
+
 
 		event := common.MapStr{
 			"@timestamp": common.Time(time.Now()),
 			"type":       b.Name,
-			"counter":    counter,
 		}
+		//TODO: send the correct message
 		bt.client.PublishEvent(event)
+		lastPoll = krakenTransactions.since
+		//TODO: what happen if the is no message ? will it be a defined since ? Create a unit test for that
 		logp.Info("Event sent")
-		counter++
 	}
 }
 

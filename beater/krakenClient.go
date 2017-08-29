@@ -21,7 +21,7 @@ type krakenTransaction struct {
 }
 
 type Krakenclient interface {
-	poll(pairs []string) []KrakenTransactions
+	Poll(pairs []string, since time.Time) KrakenTransactions
 }
 
 type KrakenHTTPClient struct{}
