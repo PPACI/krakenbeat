@@ -1,12 +1,12 @@
 package beater
 
 import (
-	"time"
-	"net/http"
-	"fmt"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	url2 "net/url"
 	"strconv"
+	"time"
 )
 
 type KrakenTransactions struct {
@@ -31,11 +31,15 @@ type krakenJson struct {
 	Result map[string]interface{} `json:"result"`
 }
 
-func (k *KrakenHTTPClient) Poll(pairs []string) KrakenTransactions {
+func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransactions {
 	transactions := KrakenTransactions{transactions: []krakenTransaction{}}
 	for _, pair := range pairs {
-		url := fmt.Sprintf("https://api.kraken.com/0/public/Trades?pair=%s", pair)
-		resp, err := http.Get(url)
+		req, err := http.NewRequest("GET", "https://api.kraken.com/0/public/Trades", nil)
+		if err != nil {
+			panic(err)
+		}
+		req.URL.RawQuery = url2.Values{"pair": []string{pair}, "since": []string{strconv.FormatInt(since.UnixNano(), 10)}}.Encode()
+		resp, err := (&http.Client{}).Do(req)
 		defer resp.Body.Close()
 		if err != nil {
 			panic(err)
@@ -49,15 +53,15 @@ func (k *KrakenHTTPClient) Poll(pairs []string) KrakenTransactions {
 			panic(err)
 		}
 		for _, transaction := range parsedBody.Result[pair].([]interface{}) {
-			price, _ := strconv.ParseFloat(transaction.([]interface{})[0].(string),64)
-			volume,_ := strconv.ParseFloat(transaction.([]interface{})[1].(string),64)
+			price, _ := strconv.ParseFloat(transaction.([]interface{})[0].(string), 64)
+			volume, _ := strconv.ParseFloat(transaction.([]interface{})[1].(string), 64)
 			transactions.transactions = append(transactions.transactions, krakenTransaction{
 				price:     price,
 				volume:    volume,
 				timestamp: time.Unix(int64(transaction.([]interface{})[2].(float64)), 0),
 			})
 		}
-		since, err := strconv.ParseInt(parsedBody.Result["last"].(string),10,64)
+		since, err := strconv.ParseInt(parsedBody.Result["last"].(string), 10, 64)
 		if err != nil {
 			panic(err)
 		}
