@@ -18,6 +18,7 @@ type krakenTransaction struct {
 	price     float64
 	volume    float64
 	timestamp time.Time
+	pair string
 }
 
 type Krakenclient interface {
@@ -59,6 +60,7 @@ func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransacti
 				price:     price,
 				volume:    volume,
 				timestamp: time.Unix(int64(transaction.([]interface{})[2].(float64)), 0),
+				pair: pair,
 			})
 		}
 		since, err := strconv.ParseInt(parsedBody.Result["last"].(string), 10, 64)

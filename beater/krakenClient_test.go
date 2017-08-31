@@ -9,7 +9,11 @@ func TestKrakenClientPoll(t *testing.T) {
 	client := KrakenHTTPClient{}
 	since := time.Now().Add(-time.Duration(2*time.Minute))
 	t.Logf("transaction since : %v\n", since)
+	t.Logf("%v\n", since.UnixNano())
 	transactions := client.Poll([]string{"BCHEUR"}, since)
+	for _, transaction := range transactions.transactions{
+		t.Logf("%+v", transaction)
+	}
 	if len(transactions.transactions) == 0{
 		t.Error("No transaction recorded !")
 	}
