@@ -82,7 +82,7 @@
           "ignore_above": 1024,
           "type": "keyword"
         },
-        "timestamp": {
+        "timestamp_transaction": {
           "type": "date"
         },
         "volume": {

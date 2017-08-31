@@ -52,14 +52,16 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 		for _, transaction := range krakenTransactions.transactions {
 			logp.Info("%+v", transaction)
 			event := common.MapStr{
-				"timestamp": common.Time(transaction.timestamp),
+				"timestamp_transaction": common.Time(transaction.timestamp),
 				"pair":      transaction.pair,
-				"price": transaction.price,
-				"volume": transaction.volume,
+				"price":     transaction.price,
+				"volume":    transaction.volume,
+				"type":      b.Name,
+				"@timestamp": common.Time(time.Now()),
 			}
 			bt.client.PublishEvent(event)
 		}
-		logp.Info("%s Event sent", len(krakenTransactions.transactions))
+		logp.Info("%d Event sent", len(krakenTransactions.transactions))
 		lastPoll = krakenTransactions.since
 	}
 }

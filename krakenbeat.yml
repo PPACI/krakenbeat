@@ -4,7 +4,7 @@
 
 krakenbeat:
   # Defines how often we will poll kraken
-  period: 1s
+  period: 5s
   pairs:
     - BCHEUR
 
@@ -33,6 +33,7 @@ krakenbeat:
 output.elasticsearch:
   # Array of hosts to connect to.
   hosts: ["localhost:9200"]
+  index: "krakenbeat-%{+yyyy.MM}"
 
   # Optional protocol and basic auth credentials.
   #protocol: "https"

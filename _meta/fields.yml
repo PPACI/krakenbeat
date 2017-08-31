@@ -6,7 +6,7 @@
       type: keyword
       required: true
       description: Name of the pair
-    - name: timestamp
+    - name: timestamp_transaction
       type: date
       required: true
       description: timestamp of the transaction

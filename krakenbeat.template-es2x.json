@@ -96,7 +96,7 @@
           "index": "not_analyzed",
           "type": "string"
         },
-        "timestamp": {
+        "timestamp_transaction": {
           "type": "date"
         },
         "volume": {
