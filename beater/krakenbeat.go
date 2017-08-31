@@ -13,9 +13,9 @@ import (
 )
 
 type Krakenbeat struct {
-	done   chan struct{}
-	config config.Config
-	client publisher.Client
+	done         chan struct{}
+	config       config.Config
+	client       publisher.Client
 	krakenClient Krakenclient
 }
 
@@ -28,8 +28,8 @@ func New(b *beat.Beat, cfg *common.Config) (beat.Beater, error) {
 	}
 
 	bt := &Krakenbeat{
-		done:   make(chan struct{}),
-		config: config,
+		done:         make(chan struct{}),
+		config:       config,
 		krakenClient: &krakenclient,
 	}
 	return bt, nil
@@ -49,17 +49,18 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 		case <-ticker.C:
 		}
 		krakenTransactions := bt.krakenClient.Poll(bt.config.Pairs, lastPoll)
-
-
-		event := common.MapStr{
-			"@timestamp": common.Time(time.Now()),
-			"type":       b.Name,
+		for _, transaction := range krakenTransactions.transactions {
+			logp.Info("%+v", transaction)
+			event := common.MapStr{
+				"timestamp": common.Time(transaction.timestamp),
+				"pair":      transaction.pair,
+				"price": transaction.price,
+				"volume": transaction.volume,
+			}
+			bt.client.PublishEvent(event)
 		}
-		//TODO: send the correct message
-		bt.client.PublishEvent(event)
+		logp.Info("%s Event sent", len(krakenTransactions.transactions))
 		lastPoll = krakenTransactions.since
-		//TODO: what happen if the is no message ? will it be a defined since ? Create a unit test for that
-		logp.Info("Event sent")
 	}
 }
 
