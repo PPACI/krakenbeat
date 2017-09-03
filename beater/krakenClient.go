@@ -56,10 +56,11 @@ func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransacti
 		for _, transaction := range parsedBody.Result[pair].([]interface{}) {
 			price, _ := strconv.ParseFloat(transaction.([]interface{})[0].(string), 64)
 			volume, _ := strconv.ParseFloat(transaction.([]interface{})[1].(string), 64)
+			timestamp := transaction.([]interface{})[2].(float64)
 			transactions.transactions = append(transactions.transactions, krakenTransaction{
 				price:     price,
 				volume:    volume,
-				timestamp: time.Unix(int64(transaction.([]interface{})[2].(float64)), 0),
+				timestamp: krakenTimestampToUnixTime(timestamp),
 				pair: pair,
 			})
 		}
@@ -70,4 +71,12 @@ func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransacti
 		transactions.since = time.Unix(0, since)
 	}
 	return transactions
+}
+
+func krakenTimestampToUnixTime(timestamp float64) time.Time{
+	second := int64(timestamp)
+	nano_part := int64(1000*(timestamp-float64(int64(timestamp))))
+	nanoduration := time.Duration(nano_part)*time.Millisecond
+	nanosecond := nanoduration.Nanoseconds()
+	return time.Unix(second, nanosecond)
 }
