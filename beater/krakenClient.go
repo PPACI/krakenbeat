@@ -33,7 +33,8 @@ type krakenJson struct {
 }
 
 func (k *KrakenHTTPClient) Poll(pairs []string, lastPolls map[string]time.Time) KrakenTransactions {
-	transactions := KrakenTransactions{transactions: []krakenTransaction{}, since: map[string]time.Time{}}
+	transactions := KrakenTransactions{transactions: []krakenTransaction{}, since: lastPolls}
+
 	for _, pair := range pairs {
 		req, err := http.NewRequest("GET", "https://api.kraken.com/0/public/Trades", nil)
 		if err != nil {

@@ -40,7 +40,10 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 
 	bt.client = b.Publisher.Connect()
 	ticker := time.NewTicker(bt.config.Period)
-	var lastPoll map[string]time.Time
+	lastPoll := map[string]time.Time{}
+	for _, pair := range bt.config.Pairs{
+		lastPoll[pair] = time.Now()
+	}
 
 
 	for {
