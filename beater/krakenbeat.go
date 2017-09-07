@@ -40,7 +40,8 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 
 	bt.client = b.Publisher.Connect()
 	ticker := time.NewTicker(bt.config.Period)
-	lastPoll := time.Now()
+	var lastPoll map[string]time.Time
+
 
 	for {
 		select {
@@ -50,7 +51,6 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 		}
 		krakenTransactions := bt.krakenClient.Poll(bt.config.Pairs, lastPoll)
 		for _, transaction := range krakenTransactions.transactions {
-			logp.Info("%+v", transaction)
 			event := common.MapStr{
 				"timestamp_transaction": common.Time(transaction.timestamp),
 				"pair":      transaction.pair,
