@@ -48,7 +48,10 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 			return nil
 		case <-ticker.C:
 		}
-		krakenTransactions := bt.krakenClient.Poll(bt.config.Pairs, lastPoll)
+		krakenTransactions, err := bt.krakenClient.Poll(bt.config.Pairs, lastPoll)
+		if err != nil {
+			continue
+		}
 		for _, transaction := range krakenTransactions.transactions {
 			logp.Info("%+v", transaction)
 			event := common.MapStr{

@@ -22,7 +22,7 @@ type krakenTransaction struct {
 }
 
 type Krakenclient interface {
-	Poll(pairs []string, since time.Time) KrakenTransactions
+	Poll(pairs []string, since time.Time) (KrakenTransactions, error)
 }
 
 type KrakenHTTPClient struct{}
@@ -32,26 +32,26 @@ type krakenJson struct {
 	Result map[string]interface{} `json:"result"`
 }
 
-func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransactions {
+func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) (KrakenTransactions, error) {
 	transactions := KrakenTransactions{transactions: []krakenTransaction{}}
 	for _, pair := range pairs {
 		req, err := http.NewRequest("GET", "https://api.kraken.com/0/public/Trades", nil)
 		if err != nil {
-			panic(err)
+			return KrakenTransactions{}, err
 		}
 		req.URL.RawQuery = url2.Values{"pair": []string{pair}, "since": []string{strconv.FormatInt(since.UnixNano(), 10)}}.Encode()
 		resp, err := (&http.Client{}).Do(req)
 		defer resp.Body.Close()
 		if err != nil {
-			panic(err)
+			return KrakenTransactions{}, err
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			panic(err)
+			return KrakenTransactions{}, err
 		}
 		parsedBody := krakenJson{}
 		if err := json.Unmarshal(body, &parsedBody); err != nil {
-			panic(err)
+			return KrakenTransactions{}, err
 		}
 		for _, transaction := range parsedBody.Result[pair].([]interface{}) {
 			price, _ := strconv.ParseFloat(transaction.([]interface{})[0].(string), 64)
@@ -66,11 +66,11 @@ func (k *KrakenHTTPClient) Poll(pairs []string, since time.Time) KrakenTransacti
 		}
 		since, err := strconv.ParseInt(parsedBody.Result["last"].(string), 10, 64)
 		if err != nil {
-			panic(err)
+			return KrakenTransactions{}, err
 		}
 		transactions.since = time.Unix(0, since)
 	}
-	return transactions
+	return transactions, nil
 }
 
 func krakenTimestampToUnixTime(timestamp float64) time.Time{
