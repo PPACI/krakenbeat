@@ -7,6 +7,20 @@ Ensure that this folder is at the following location:
 
 ## Getting Started with Krakenbeat
 
+
+### Selection pair to watch
+1. Use the [Kraken API](https://api.kraken.com/0/public/AssetPairs) to check tradeable pair
+2. Insert the selected pairs in the *krakenbeat.yml* file
+3. That's all
+ 
+### Using Docker
+1. Clone
+2. set your *krakenbeat.yml*
+3. `docker build -t krakenbeat .`
+4. `docker run --name krakenbeat --network=host --restart=always --log-opt max-size=10m -d krakenbeat`
+
+Follow for no-docker method
+
 ### Requirements
 
 * [Golang](https://golang.org/dl/) 1.7
