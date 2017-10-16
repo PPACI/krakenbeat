@@ -41,10 +41,9 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 	bt.client = b.Publisher.Connect()
 	ticker := time.NewTicker(bt.config.Period)
 	lastPoll := map[string]time.Time{}
-	for _, pair := range bt.config.Pairs{
+	for _, pair := range bt.config.Pairs {
 		lastPoll[pair] = time.Now()
 	}
-
 
 	for {
 		select {
@@ -59,11 +58,11 @@ func (bt *Krakenbeat) Run(b *beat.Beat) error {
 		for _, transaction := range krakenTransactions.transactions {
 			event := common.MapStr{
 				"timestamp_transaction": common.Time(transaction.timestamp),
-				"pair":      transaction.pair,
-				"price":     transaction.price,
-				"volume":    transaction.volume,
-				"type":      b.Name,
-				"@timestamp": common.Time(time.Now()),
+				"pair":                  transaction.pair,
+				"price":                 transaction.price,
+				"volume":                transaction.volume,
+				"type":                  b.Name,
+				"@timestamp":            common.Time(time.Now()),
 			}
 			bt.client.PublishEvent(event)
 		}
