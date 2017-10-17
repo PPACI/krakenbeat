@@ -7,7 +7,7 @@ import (
 
 func TestKrakenClientPoll(t *testing.T) {
 	client := KrakenHTTPClient{}
-	since := map[string]time.Time{"BCHEUR":time.Now().Add(-time.Duration(2 * time.Minute))}
+	since := map[string]time.Time{"BCHEUR": time.Now().Add(-time.Duration(2 * time.Minute))}
 	t.Logf("transaction since : %v\n", since)
 	t.Logf("%v\n", since["BCHEUR"].UnixNano())
 	transactions, err := client.Poll([]string{"BCHEUR"}, since)
