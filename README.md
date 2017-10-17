@@ -1,4 +1,5 @@
 # Krakenbeat
+[![Build Status](https://travis-ci.org/PPACI/krakenbeat.svg?branch=master)](https://travis-ci.org/PPACI/krakenbeat)
 
 Welcome to Krakenbeat.
 
