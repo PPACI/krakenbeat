@@ -46,3 +46,8 @@ before-build:
 # Collects all dependencies and then calls update
 .PHONY: collect
 collect:
+
+#a real, lightweight, testsuite. It wont test the integration of beats with but... that's ES job !
+.PHONY: lighttestsuite
+lighttestsuite:
+	go test ./...
